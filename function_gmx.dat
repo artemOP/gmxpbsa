@@ -202,6 +202,7 @@ function EnergyMin_n {
 	local _pdb2gmx="$8"
 	local _grompp="$9"
 	local _mdrun="${10}"
+	local _maxwarn=$11
 
 	name=`echo $_name$_count`
 		
@@ -211,7 +212,7 @@ function EnergyMin_n {
 		echo "$_ffield" | $Gpath\/$_pdb2gmx -f _$name.pdb -p topol_$_name.top -i posre_$_name.itp -o _$name.gro -ignh -water tip3p >>STD_ERR0 2>&1
 	fi
 
-	check2 _$name.gro ../REPORTFILE0 && $_Gpath\/$_grompp -f Mm.mdp -c _$name.gro -p topol_$_name.top -o $name.tpr >>STD_ERR0 2>&1 && check2 $name.tpr 
+	check2 _$name.gro ../REPORTFILE0 && $_Gpath\/$_grompp -f Mm.mdp -c _$name.gro -p topol_$_name.top -o $name.tpr -maxwarn $_maxwarn >>STD_ERR0 2>&1 && check2 $name.tpr 
 
 	if [ $_usetpbcon == "y" ]; then
 		check2 $_name.tpr ../REPORTFILE0 && $_Gpath\/$_mdrun -s $_name.tpr -rerun _$name.pdb -deffnm $name >>STD_ERR0 2>&1 && check2 $name.log ../REPORTFILE0
@@ -258,6 +259,7 @@ function EnergyMin_y {
 	local _pdb2gmx="${10}"
 	local _grompp="${11}"
 	local _mdrun="${12}"
+	local _maxwarn=$13
 	name=`echo $_name$_count`
 
 	if [ $_topology == "y" ]; then
@@ -267,7 +269,7 @@ function EnergyMin_y {
 	fi
 
  	check2 _$name.gro ../REPORTFILE0 && $_Gpath\/$_editconf -f _$name.gro -o _box$_count.gro -c -box $_bX $_bY $_bZ >>STD_ERR0 2>&1
-   	check2 _box$_count.gro ../REPORTFILE0 && $_Gpath\/$_grompp -f Mm.mdp -c _box$_count.gro -p topol_$_name.top -o $name.tpr >>STD_ERR0 2>&1
+   	check2 _box$_count.gro ../REPORTFILE0 && $_Gpath\/$_grompp -f Mm.mdp -c _box$_count.gro -p topol_$_name.top -o $name.tpr -maxwarn $_maxwarn >>STD_ERR0 2>&1
   	check2 $name.tpr ../REPORTFILE0 && $Gpath\/$_mdrun -s $name.tpr -deffnm $name -c $name.pdb >>STD_ERR0 2>&1 && check2 $name.pdb ../REPORTFILE0
 
 	tar cfz GROfiles_$name.tar.gz _$name.gro && rm -f _$name.gro
@@ -394,7 +396,7 @@ function ReadEnergy {
 	c=`sed  -n '/'$_energy'/{N;p;}' $_filename | tail -n 2 | head -n 1 | awk -v energy="$_energy" '{ for(i=1;i<=NF;i++){if ($i ~ energy) { print i } }}'`
 	VAL=$(sed -n $l\p $_filename | awk -v c="$c" '{print $c}')
 	
-	#if ! [[ "$VAL" =~ ^[0-9]+$ ]] -> controla che sia un numero, però non riconosce gli esponenziali!
+	#if ! [[ "$VAL" =~ ^[0-9]+$ ]] -> controla che sia un numero, perÃ² non riconosce gli esponenziali!
 	if [ -z $VAL ] 
 	then
 	#	exec >&2;
@@ -419,7 +421,7 @@ function ReadEnergy_Pot {
 		c=`sed -n $l'p' $_filename | awk -v energy="$_energy" '{ for(i=1;i<=NF;i++){if ($i ~ energy) { print i } }}'`
 
 		VAL=$(sed -n $m'p' $_filename | awk -v c="$c" '{print $c}')
-		#if ! [[ "$VAL" =~ ^[0-9]+$ ]] -> controla che sia un numero, però non riconosce gli esponenziali!
+		#if ! [[ "$VAL" =~ ^[0-9]+$ ]] -> controla che sia un numero, perÃ² non riconosce gli esponenziali!
 		if [ -z $VAL ] 
 		then
 		#	exec >&2;
@@ -445,7 +447,7 @@ function ReadEnergy_special {
 		c=`sed  -n '/'$_energy'/{N;p;}' $_filename | tail -n 2 | head -n 1 | awk -v energy="$_energy" '{ for(i=1;i<=NF;i++){if ($i ~ energy) { print i } }}'`
 		VAL=$(sed -n $l\p $_filename | awk -v c="$c" '{print $c}')
 	
-		#if ! [[ "$VAL" =~ ^[0-9]+$ ]] -> controla che sia un numero, però non riconosce gli esponenziali!
+		#if ! [[ "$VAL" =~ ^[0-9]+$ ]] -> controla che sia un numero, perÃ² non riconosce gli esponenziali!
 		if [ -z $VAL ] 
 		then
 		#	exec >&2;

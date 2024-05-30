@@ -72,6 +72,7 @@ fi
 
 set_variable_default "skip" "1";
 set_variable_default "min" "n";
+set_variable_default "max_warn" "3";
 
 set_variable_default "use_topology" "n";
 #set_variable_default "NO_topol_ff" "n";
@@ -462,7 +463,7 @@ if [ "$min" == "y" ]; then
 fi
 
 
-#@@@@@@@@ò@@@@@@@@@@@@@@@@@@@@@@@@@@#
+#@@@@@@@@ï¿½@@@@@@@@@@@@@@@@@@@@@@@@@@#
 #  CAS: Mutants' folders generation #		
 #@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@#
 
@@ -892,7 +893,7 @@ fi
 if [ $Ltopology_Pff == "y" ]; then
 	name=`echo ${receptor}0`
 	#Att: to avoid confusion HISTIDINE must be called "HIE", "HID" or "HIP". If "HIS" is found in "_${name}.pdb" they are replaced by the correct name.
-	# PROBLEMA: per amber funziona. con charmm si chiamano HSE, HSD, HSP... non si può fare
+	# PROBLEMA: per amber funziona. con charmm si chiamano HSE, HSD, HSP... non si puï¿½ fare
 	IsHis=`echo $Histidine | cut -d " " -f1`
 	if [ -z $IsHis ]; then
 		echo "$ffield" | $Gpath\/$pdb2gmx -f _${name}.pdb -p topol_${receptor}.top -i posre_${receptor}.itp -o _${name}.gro -water tip3p -ignh >>STD_ERR0 2>&1
@@ -934,7 +935,7 @@ if [ "$min" = "y" ]; then
   # The EM step is performed for each complex, receptor and ligand structure 
 	for  (( counter=0; counter<=$fin; counter++ )); do 
 		for molec in comp $receptor $ligand; do
-			EnergyMin_y "$molec" "$counter" "$Gpath" "$ffield" "$bX" "$bY" "$bZ" "$use_topology" "$editconf" "$pdb2gmx" "$grompp" "$mdrun" 
+			EnergyMin_y "$molec" "$counter" "$Gpath" "$ffield" "$bX" "$bY" "$bZ" "$use_topology" "$editconf" "$pdb2gmx" "$grompp" "$mdrun"  "$max_warn"
 		done
 	done 
 else
@@ -969,7 +970,7 @@ else
 	 # fi 
 	  for  (( counter=0; counter<=$fin; counter++ )); do 
 		for molec in comp $receptor $ligand; do
-			EnergyMin_n "$molec" "$counter" "$Gpath" "$ffield" "$use_topology" "$use_tpbcon" "$editconf" "$pdb2gmx" "$grompp" "$mdrun"  
+			EnergyMin_n "$molec" "$counter" "$Gpath" "$ffield" "$use_topology" "$use_tpbcon" "$editconf" "$pdb2gmx" "$grompp" "$mdrun" "$max_warn"
 		done
 	  done
 	  #if [ $use_tpbcon == "y" ]; then rm -f comp.tpr ${ligand}.tpr ${receptor}.tpr;fi 
