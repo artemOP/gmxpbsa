@@ -43,16 +43,16 @@ lincs_iter  =  4" >> Mm.mdp
 #rlist = 0 \nrcoulomb = 0 \nrvdw = 0 \npbc = no \n;" >> Mm.mdp
 #}
 
-function PRINT_MINfile_n {
- echo -e "title = Energy in gas \ncpp   = /usr/bin/cpp \nconstraints = none \nnsteps = 0 \nnstlist = 0 \nns_type = simple
-rlist = 0 \nrcoulomb = 0 \nrvdw = 0 \npbc = no \ncutoff-scheme = group \n;" >> Mm.mdp
-}
-
-#trying with verlet
-##function PRINT_MINfile_n {
-# echo -e "title = Energy in gas \ncpp   = /usr/bin/cpp \nconstraints = none \nnsteps = 0 \nnstlist = 1 \nns_type = simple
-#\n;rcoulomb = 0.1 \n;rvdw = 0.1 \npbc = xyz \ncutoff-scheme = Verlet \nverlet-buffer-drift=0.005 \nperiodic-molecules = no" >> Mm.mdp
+#function PRINT_MINfile_n {
+# echo -e "title = Energy in gas \ncpp   = /usr/bin/cpp \nconstraints = none \nnsteps = 0 \nnstlist = 0 \nns_type = simple
+#rlist = 0 \nrcoulomb = 0 \nrvdw = 0 \npbc = no \ncutoff-scheme = group \n;" >> Mm.mdp
 #}
+
+trying with verlet
+function PRINT_MINfile_n {
+ echo -e "title = Energy in gas \ncpp   = /usr/bin/cpp \nconstraints = none \nnsteps = 0 \nnstlist = 20 \nns_type = simple
+\n;rcoulomb = 0.1 \n;rvdw = 0.1 \npbc = xyz \ncutoff-scheme = Verlet \nverlet-buffer-drift=0.005 \nperiodic-molecules = no \ncontinuation = yes" >> Mm.mdp
+}
 
 
 
